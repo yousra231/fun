@@ -1,864 +1,112 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🌙 3D Lunar Phase Calculator</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Do You Like Me? 💘</title>
+  <link rel="icon" href="https://emojiapi.dev/api/v1/heart/64.png" type="image/png">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to right, #ffe0ec, #ffb6c1);
+      font-family: 'Comic Sans MS', cursive;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column;
+    }
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #0c0c1d 0%, #1a1a2e 50%, #16213e 100%);
-            min-height: 100vh;
-            color: #ffffff;
-            overflow-x: hidden;
-            position: relative;
-        }
+    h1 {
+      font-size: 2.5rem;
+      color: #d63384;
+      margin-bottom: 40px;
+      animation: pop 1s ease;
+    }
 
-        .stars {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 1;
-        }
+    @keyframes pop {
+      0% { transform: scale(0); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
 
-        .star {
-            position: absolute;
-            background: white;
-            border-radius: 50%;
-            animation: twinkle 2s infinite alternate;
-        }
+    .buttons {
+      display: flex;
+      gap: 30px;
+    }
 
-        @keyframes twinkle {
-            0% { opacity: 0.3; transform: scale(1); }
-            100% { opacity: 1; transform: scale(1.2); }
-        }
+    button {
+      padding: 15px 30px;
+      font-size: 18px;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: 0.3s ease;
+    }
 
-        .container {
-            position: relative;
-            z-index: 10;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
-        }
+    #yes {
+      background: #ff4da6;
+      color: white;
+    }
 
-        .header {
-            text-align: center;
-            margin-bottom: 2rem;
-            animation: fadeInDown 1s ease-out;
-        }
+    #yes:hover {
+      background: #e60073;
+      transform: scale(1.1);
+    }
 
-        @keyframes fadeInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+    #no {
+      background: #cccccc;
+      color: black;
+      position: relative;
+    }
 
-        .title {
-            font-size: 3rem;
-            font-weight: 700;
-            background: linear-gradient(45deg, #64b5f6, #42a5f5, #2196f3, #1976d2);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 0.5rem;
-            text-shadow: 0 0 30px rgba(100, 181, 246, 0.3);
-        }
+    .message {
+      margin-top: 30px;
+      font-size: 1.5rem;
+      color: #ff3399;
+      display: none;
+    }
 
-        .subtitle {
-            font-size: 1.2rem;
-            color: #b0bec5;
-            font-weight: 300;
-        }
+    .heart {
+      animation: float 4s ease-in-out infinite;
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      font-size: 2rem;
+    }
 
-        .main-content {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-            align-items: start;
-        }
-
-        .input-section {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(20px);
-            border-radius: 20px;
-            padding: 2rem;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            animation: fadeInUp 1s ease-out 0.3s both;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .input-group {
-            position: relative;
-        }
-
-        .input-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-            color: #90caf9;
-        }
-
-        .input-group input,
-        .input-group select {
-            width: 100%;
-            padding: 1rem;
-            border: 2px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            background: rgba(255, 255, 255, 0.05);
-            color: rgb(175, 176, 198);
-            font-size: 1rem;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
-        }
-
-        .input-group input:focus,
-        .input-group select:focus {
-            outline: none;
-            border-color: #64b5f6;
-            box-shadow: 0 0 0 3px rgba(100, 181, 246, 0.2);
-            transform: translateY(-2px);
-        }
-
-        .calculate-btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border: none;
-            border-radius: 50px;
-            padding: 1rem 2rem;
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: white;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            width: 100%;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .calculate-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
-        }
-
-        .moon-section {
-            background: rgba(255, 255, 255, 0.02);
-            backdrop-filter: blur(20px);
-            border-radius: 20px;
-            padding: 2rem;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            animation: fadeInUp 1s ease-out 0.6s both;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            position: relative;
-            min-height: 500px;
-        }
-
-        #moon-container {
-            width: 100%;
-            height: 400px;
-            border-radius: 15px;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .controls {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            margin-top: 1rem;
-            flex-wrap: wrap;
-        }
-
-        .control-btn {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            border-radius: 8px;
-            padding: 0.5rem 1rem;
-            color: white;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 0.9rem;
-        }
-
-        .control-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: translateY(-2px);
-        }
-
-        .control-btn.active {
-            background: #667eea;
-            border-color: #667eea;
-        }
-
-        .phase-info {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(20px);
-            border-radius: 20px;
-            padding: 2rem;
-            margin-top: 2rem;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            animation: slideIn 0.8s ease-out;
-            display: none;
-        }
-
-        .phase-info.active {
-            display: block;
-        }
-
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .phase-name {
-            font-size: 2rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            background: linear-gradient(45deg, #ffd700, #ffed4e, #fff176);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-align: center;
-        }
-
-        .phase-details {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-
-        .detail-item {
-            text-align: center;
-            padding: 1rem;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
-            transition: transform 0.3s ease;
-        }
-
-        .detail-item:hover {
-            transform: translateY(-5px);
-        }
-
-        .detail-label {
-            font-size: 0.9rem;
-            color: #90caf9;
-            margin-bottom: 0.5rem;
-        }
-
-        .detail-value {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: #ffffff;
-        }
-
-        .loading {
-            display: none;
-            text-align: center;
-            padding: 2rem;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(0, 0, 0, 0.8);
-            border-radius: 15px;
-            z-index: 100;
-        }
-
-        .loading.active {
-            display: block;
-        }
-
-        .spinner {
-            width: 50px;
-            height: 50px;
-            border: 3px solid rgba(255, 255, 255, 0.3);
-            border-top: 3px solid #64b5f6;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 1rem;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .info-panel {
-            margin-top: 1rem;
-            padding: 1rem;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
-            font-size: 0.9rem;
-            color: #b0bec5;
-        }
-
-        @media (max-width: 768px) {
-            .main-content {
-                grid-template-columns: 1fr;
-                gap: 1rem;
-            }
-            
-            .title {
-                font-size: 2rem;
-            }
-            
-            .container {
-                padding: 1rem;
-            }
-        }
-    </style>
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-10px); }
+    }
+  </style>
 </head>
 <body>
-    <div class="stars" id="stars"></div>
-    
-    <div class="container">
-        <div class="header">
-            <h1 class="title">🌙 3D Lunar Phase Calculator</h1>
-            <p class="subtitle">Experience the moon in stunning 3D reality</p>
-        </div>
+  <div class="heart">💖</div>
+  <h1>Do you like me? 😳</h1>
+  <div class="buttons">
+    <button id="yes">Yes 💘</button>
+    <button id="no">No 🙈</button>
+  </div>
+  <div class="message" id="message">Awwww 🥰 I like you too! 💕</div>
 
-        <div class="main-content">
-            <div class="input-section">
-                <form id="moonForm">
-                    <div class="form-group">
-                        <div class="input-group">
-                            <label for="day">Day</label>
-                            <select id="day" required>
-                                <option value="">Select day</option>
-                            </select>
-                        </div>
-                        <div class="input-group">
-                            <label for="month">Month</label>
-                            <select id="month" required>
-                                <option value="">Select month</option>
-                            </select>
-                        </div>
-                        <div class="input-group">
-                            <label for="year">Year</label>
-                            <input type="number" id="year" min="1900" max="2100" placeholder="YYYY" required>
-                        </div>
-                    </div>
-                    <button type="submit" class="calculate-btn">🚀 Launch 3D Moon</button>
-                </form>
+  <script>
+    const yesBtn = document.getElementById("yes");
+    const noBtn = document.getElementById("no");
+    const message = document.getElementById("message");
 
-                <div class="info-panel">
-                    <strong>🎮 3D Controls:</strong><br>
-                    • Drag to rotate the moon<br>
-                    • Scroll to zoom in/out<br>
-                    • Click controls below to change view
-                </div>
-            </div>
+    yesBtn.addEventListener("click", () => {
+      message.style.display = "block";
+    });
 
-            <div class="moon-section">
-                <div id="moon-container">
-                    <div class="loading" id="loading">
-                        <div class="spinner"></div>
-                        <p>Rendering 3D Moon...</p>
-                    </div>
-                </div>
-                
-                <div class="controls">
-                    <button class="control-btn" id="autoRotate">🌀 Auto Rotate</button>
-                    <button class="control-btn" id="resetView">🎯 Reset View</button>
-                    <button class="control-btn" id="earthView">🌍 Earth View</button>
-                    <button class="control-btn" id="spaceView">🚀 Space View</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="phase-info" id="phaseInfo">
-            <div class="phase-name" id="phaseName"></div>
-            <div class="phase-details">
-                <div class="detail-item">
-                    <div class="detail-label">Illumination</div>
-                    <div class="detail-value" id="illumination"></div>
-                </div>
-                <div class="detail-item">
-                    <div class="detail-label">Moon Age</div>
-                    <div class="detail-value" id="moonAge"></div>
-                </div>
-                <div class="detail-item">
-                    <div class="detail-label">Next Phase</div>
-                    <div class="detail-value" id="nextPhase"></div>
-                </div>
-                <div class="detail-item">
-                    <div class="detail-label">Distance</div>
-                    <div class="detail-value" id="distance"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script>
-        let scene, camera, renderer, moon, controls, animationId;
-        let autoRotateEnabled = false;
-        let currentPhase = 0;
-
-        // Create animated stars background
-        function createStars() {
-            const starsContainer = document.getElementById('stars');
-            const numberOfStars = 100;
-            
-            for (let i = 0; i < numberOfStars; i++) {
-                const star = document.createElement('div');
-                star.className = 'star';
-                star.style.left = Math.random() * 100 + '%';
-                star.style.top = Math.random() * 100 + '%';
-                star.style.width = Math.random() * 3 + 1 + 'px';
-                star.style.height = star.style.width;
-                star.style.animationDelay = Math.random() * 2 + 's';
-                star.style.animationDuration = (Math.random() * 3 + 2) + 's';
-                starsContainer.appendChild(star);
-            }
-        }
-
-        // Initialize form options
-        function initializeForm() {
-            const daySelect = document.getElementById('day');
-            const monthSelect = document.getElementById('month');
-            
-            // Populate days
-            for (let i = 1; i <= 31; i++) {
-                const option = document.createElement('option');
-                option.value = i;
-                option.textContent = i;
-                daySelect.appendChild(option);
-            }
-            
-            // Populate months
-            const months = [
-                'January', 'February', 'March', 'April', 'May', 'June',
-                'July', 'August', 'September', 'October', 'November', 'December'
-            ];
-            months.forEach((month, index) => {
-                const option = document.createElement('option');
-                option.value = index + 1;
-                option.textContent = month;
-                monthSelect.appendChild(option);
-            });
-        }
-
-        // Initialize 3D scene
-        function init3D() {
-            const container = document.getElementById('moon-container');
-            
-            // Scene setup
-            scene = new THREE.Scene();
-            scene.background = new THREE.Color(0x000011);
-            
-            // Camera setup
-            camera = new THREE.PerspectiveCamera(75, container.offsetWidth / container.offsetHeight, 0.1, 1000);
-            camera.position.z = 5;
-            
-            // Renderer setup
-            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-            renderer.setSize(container.offsetWidth, container.offsetHeight);
-            renderer.shadowMap.enabled = true;
-            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-            container.appendChild(renderer.domElement);
-            
-            // Lighting setup
-            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-            scene.add(ambientLight);
-            
-            const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-            directionalLight.position.set(5, 5, 5);
-            directionalLight.castShadow = true;
-            directionalLight.shadow.mapSize.width = 2048;
-            directionalLight.shadow.mapSize.height = 2048;
-            scene.add(directionalLight);
-
-            // Create moon
-            createMoon();
-            
-            // Add stars to 3D scene
-            createStarField();
-            
-            // Simple mouse controls
-            setupControls();
-            
-            // Start animation loop
-            animate();
-        }
-
-        function createStarField() {
-            const starGeometry = new THREE.BufferGeometry();
-            const starMaterial = new THREE.PointsMaterial({
-                color: 0xffffff,
-                size: 2,
-                transparent: true
-            });
-
-            const starVertices = [];
-            for (let i = 0; i < 1000; i++) {
-                const x = (Math.random() - 0.5) * 2000;
-                const y = (Math.random() - 0.5) * 2000;
-                const z = (Math.random() - 0.5) * 2000;
-                starVertices.push(x, y, z);
-            }
-
-            starGeometry.setAttribute('position', new THREE.Float32BufferAttribute(starVertices, 3));
-            const stars = new THREE.Points(starGeometry, starMaterial);
-            scene.add(stars);
-        }
-
-        function createMoon() {
-            // Create moon geometry
-            const moonGeometry = new THREE.SphereGeometry(2, 128, 128); // Augmente les segments
-            
-            // Create moon material with texture-like appearance
-            const moonMaterial = new THREE.MeshStandardMaterial({
-                color: 0xf5f5dc,
-                roughness: 0.7,
-                metalness: 0.1
-            });
-            
-            // Create moon mesh
-            moon = new THREE.Mesh(moonGeometry, moonMaterial);
-            moon.receiveShadow = true;
-            moon.castShadow = true;
-            
-            // Add surface details
-            addMoonSurface();
-            
-            scene.add(moon);
-        }
-
-        function addMoonSurface() {
-            // Add craters and surface features
-            const craterGroup = new THREE.Group();
-            
-            for (let i = 0; i < 15; i++) {
-                const craterGeometry = new THREE.RingGeometry(0.05, 0.15, 8);
-                const craterMaterial = new THREE.MeshBasicMaterial({
-                    color: 0x888888,
-                    side: THREE.DoubleSide,
-                    transparent: false,
-                    opacity: 0.3
-                });
-                
-                const crater = new THREE.Mesh(craterGeometry, craterMaterial);
-                
-                // Random positioning on sphere surface
-                const phi = Math.random() * Math.PI * 2;
-                const theta = Math.random() * Math.PI;
-                const radius = 2.01;
-                
-                crater.position.x = radius * Math.sin(theta) * Math.cos(phi);
-                crater.position.y = radius * Math.sin(theta) * Math.sin(phi);
-                crater.position.z = radius * Math.cos(theta);
-                
-                crater.lookAt(0, 0, 0);
-                craterGroup.add(crater);
-            }
-            
-            moon.add(craterGroup);
-        }
-
-        function setupControls() {
-            const container = document.getElementById('moon-container');
-            let mouseDown = false;
-            let mouseX = 0;
-            let mouseY = 0;
-
-            container.addEventListener('mousedown', (event) => {
-                mouseDown = true;
-                mouseX = event.clientX;
-                mouseY = event.clientY;
-            });
-
-            container.addEventListener('mousemove', (event) => {
-                if (!mouseDown) return;
-
-                const deltaX = event.clientX - mouseX;
-                const deltaY = event.clientY - mouseY;
-
-                moon.rotation.y += deltaX * 0.01;
-                moon.rotation.x += deltaY * 0.01;
-
-                mouseX = event.clientX;
-                mouseY = event.clientY;
-            });
-
-            container.addEventListener('mouseup', () => {
-                mouseDown = false;
-            });
-
-            container.addEventListener('wheel', (event) => {
-                camera.position.z += event.deltaY * 0.01;
-                camera.position.z = Math.max(3, Math.min(10, camera.position.z));
-            });
-
-            // Touch controls for mobile
-            container.addEventListener('touchstart', (event) => {
-                if (event.touches.length === 1) {
-                    mouseDown = true;
-                    mouseX = event.touches[0].clientX;
-                    mouseY = event.touches[0].clientY;
-                }
-            });
-
-            container.addEventListener('touchmove', (event) => {
-                if (!mouseDown || event.touches.length !== 1) return;
-                event.preventDefault();
-
-                const deltaX = event.touches[0].clientX - mouseX;
-                const deltaY = event.touches[0].clientY - mouseY;
-
-                moon.rotation.y += deltaX * 0.01;
-                moon.rotation.x += deltaY * 0.01;
-
-                mouseX = event.touches[0].clientX;
-                mouseY = event.touches[0].clientY;
-            });
-
-            container.addEventListener('touchend', () => {
-                mouseDown = false;
-            });
-        }
-
-        function animate() {
-            animationId = requestAnimationFrame(animate);
-            
-            if (autoRotateEnabled && moon) {
-                moon.rotation.y += 0.005;
-            }
-            
-            renderer.render(scene, camera);
-        }
-
-        function updateMoonPhase(phaseFraction) {
-            if (!moon) return;
-            
-            // Create phase shadow
-            const shadowGeometry = new THREE.SphereGeometry(2.01, 64, 64);
-            const shadowMaterial = new THREE.MeshBasicMaterial({
-                color: 0x000000,
-                transparent: true,
-                opacity: 0.8
-            });
-            
-            // Remove existing shadow
-            const existingShadow = moon.getObjectByName('phaseShadow');
-            if (existingShadow) {
-                moon.remove(existingShadow);
-            }
-            
-            if (phaseFraction !== 0.5) { // Not full moon
-                const phaseShadow = new THREE.Mesh(shadowGeometry, shadowMaterial);
-                phaseShadow.name = 'phaseShadow';
-                
-                // Position shadow based on phase
-                if (phaseFraction < 0.5) {
-                    // Waxing - shadow on left side
-                    const scale = 1 - (phaseFraction * 2);
-                    phaseShadow.scale.x = scale;
-                    phaseShadow.position.x = -1 + scale;
-                } else {
-                    // Waning - shadow on right side
-                    const scale = (phaseFraction - 0.5) * 2;
-                    phaseShadow.scale.x = scale;
-                    phaseShadow.position.x = 1 - scale;
-                }
-                
-                moon.add(phaseShadow);
-            }
-        }
-
-        // Moon phase calculations
-        function julianDayNumber(year, month, day) {
-            if (month <= 2) {
-                year -= 1;
-                month += 12;
-            }
-            
-            const a = Math.floor(year / 100);
-            const b = 2 - a + Math.floor(a / 4);
-            
-            return Math.floor(365.25 * (year + 4716)) + Math.floor(30.6001 * (month + 1)) + day + b - 1524.5;
-        }
-
-        function calculateMoonPhase(year, month, day) {
-            const referenceJDN = 2451549.5;
-            const currentJDN = julianDayNumber(year, month, day);
-            const synodicMonth = 29.53058867;
-            
-            const daysSinceNew = currentJDN - referenceJDN;
-            const cycles = daysSinceNew / synodicMonth;
-            const phaseFraction = cycles - Math.floor(cycles);
-            
-            const moonAge = phaseFraction * synodicMonth;
-            const illumination = (1 - Math.cos(2 * Math.PI * phaseFraction)) / 2 * 100;
-            
-            let phaseName, nextPhase;
-            
-            if (moonAge < 1.84566) {
-                phaseName = "New Moon";
-                nextPhase = "Waxing Crescent";
-            } else if (moonAge < 5.53699) {
-                phaseName = "Waxing Crescent";
-                nextPhase = "First Quarter";
-            } else if (moonAge < 9.22831) {
-                phaseName = "First Quarter";
-                nextPhase = "Waxing Gibbous";
-            } else if (moonAge < 12.91963) {
-                phaseName = "Waxing Gibbous";
-                nextPhase = "Full Moon";
-            } else if (moonAge < 16.61096) {
-                phaseName = "Full Moon";
-                nextPhase = "Waning Gibbous";
-            } else if (moonAge < 20.30228) {
-                phaseName = "Waning Gibbous";
-                nextPhase = "Last Quarter";
-            } else if (moonAge < 23.99361) {
-                phaseName = "Last Quarter";
-                nextPhase = "Waning Crescent";
-            } else if (moonAge < 27.68493) {
-                phaseName = "Waning Crescent";
-                nextPhase = "New Moon";
-            } else {
-                phaseName = "New Moon";
-                nextPhase = "Waxing Crescent";
-            }
-            
-            // Simulate distance variation (384,400 km average)
-            const distance = 384400 + Math.sin(phaseFraction * Math.PI * 2) * 20000;
-            
-            return {
-                phaseName,
-                illumination,
-                moonAge,
-                phaseFraction,
-                nextPhase,
-                distance
-            };
-        }
-
-        // Control button handlers
-        document.getElementById('autoRotate').addEventListener('click', function() {
-            autoRotateEnabled = !autoRotateEnabled;
-            this.classList.toggle('active');
-            this.textContent = autoRotateEnabled ? '⏸️ Stop Rotate' : '🌀 Auto Rotate';
-        });
-
-        document.getElementById('resetView').addEventListener('click', function() {
-            if (moon) {
-                moon.rotation.x = 0;
-                moon.rotation.y = 0;
-                moon.rotation.z = 0;
-            }
-            camera.position.set(0, 0, 5);
-        });
-
-        document.getElementById('earthView').addEventListener('click', function() {
-            camera.position.set(0, 0, 5);
-            if (moon) {
-                moon.rotation.y = 0;
-            }
-        });
-
-        document.getElementById('spaceView').addEventListener('click', function() {
-            camera.position.set(3, 3, 7);
-        });
-
-        // Form submission
-        document.getElementById('moonForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const day = parseInt(document.getElementById('day').value);
-            const month = parseInt(document.getElementById('month').value);
-            const year = parseInt(document.getElementById('year').value);
-            
-            if (!day || !month || !year) {
-                alert('Please fill in all fields');
-                return;
-            }
-            
-            // Show loading
-            document.getElementById('loading').classList.add('active');
-            
-            // Initialize 3D scene if not already done
-            if (!scene) {
-                init3D();
-            }
-            
-            setTimeout(() => {
-                const moonData = calculateMoonPhase(year, month, day);
-                currentPhase = moonData.phaseFraction;
-                
-                // Update moon phase
-                updateMoonPhase(moonData.phaseFraction);
-                
-                // Update UI
-                document.getElementById('phaseName').textContent = moonData.phaseName;
-                document.getElementById('illumination').textContent = moonData.illumination.toFixed(1) + '%';
-                document.getElementById('moonAge').textContent = moonData.moonAge.toFixed(1) + ' days';
-                document.getElementById('nextPhase').textContent = moonData.nextPhase;
-                document.getElementById('distance').textContent = Math.round(moonData.distance).toLocaleString() + ' km';
-                
-                // Show results
-                document.getElementById('loading').classList.remove('active');
-                document.getElementById('phaseInfo').classList.add('active');
-                
-            }, 1000);
-        });
-
-        // Handle window resize
-        window.addEventListener('resize', function() {
-            if (camera && renderer) {
-                const container = document.getElementById('moon-container');
-                camera.aspect = container.offsetWidth / container.offsetHeight;
-                camera.updateProjectionMatrix();
-                renderer.setSize(container.offsetWidth, container.offsetHeight);
-            }
-        });
-
-        // Initialize everything
-        document.addEventListener('DOMContentLoaded', function() {
-            createStars();
-            initializeForm();
-        });
-    </script>
+    // Escape effect for "No" button
+    noBtn.addEventListener("mouseenter", () => {
+      const i = Math.floor(Math.random() * window.innerWidth - 100);
+      const j = Math.floor(Math.random() * window.innerHeight - 50);
+      noBtn.style.position = "absolute";
+      noBtn.style.left = `${i}px`;
+      noBtn.style.top = `${j}px`;
+    });
+  </script>
 </body>
 </html>
